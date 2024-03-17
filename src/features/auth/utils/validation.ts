@@ -47,7 +47,7 @@ const loginSchema: z.ZodType<LoginProps> = z.object({
       message: "Enter a valid email",
     })
     .email({ message: "Invalid email address" }),
-  trial_count: z.number(),
+
   password: z.string().min(6, {
     message: "Password must be longer than or equal to 6 characters.",
   }),

@@ -10,6 +10,9 @@ import { LoginType, authZodValidator } from "@/features/auth/utils/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "@/shared/components/Form/FormInput";
 import Button from "@/shared/components/Form/Button";
+import api from "@/shared/utils/api";
+import apiResponseErrors from "@/shared/utils/apiResponseErrors";
+import { toastSuccess } from "@/shared/utils/toastAlert";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -33,9 +36,16 @@ const Login: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<LoginType> = async (data: LoginType) => {
+    const { email, password } = data;
     try {
+      const response = await api.post("/auth/login", {
+        email,
+        password,
+      });
+      toastSuccess(response.data?.message);
+      router.push("/todo");
     } catch (error) {
-      // handleAsyncErrors(error);
+      apiResponseErrors(error);
     }
     reset();
   };
