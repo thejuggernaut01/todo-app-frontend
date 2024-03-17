@@ -2,12 +2,12 @@
 
 import React, { forwardRef, useState } from "react";
 import Image from "next/image";
-import { FormInput } from "@/shared/types/form";
+import { FormInputProps } from "@/shared/types/form";
 
-const FormInput: React.ForwardRefRenderFunction<HTMLInputElement, FormInput> = (
-  { type, placeholder, id, autoFocus, defaultValue, ...props },
-  ref
-) => {
+const FormInput: React.ForwardRefRenderFunction<
+  HTMLInputElement,
+  FormInputProps
+> = ({ type, placeholder, id, autoFocus, defaultValue, ...props }, ref) => {
   const [toggle, setToggle] = useState(false);
 
   return (

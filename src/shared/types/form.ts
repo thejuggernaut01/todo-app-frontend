@@ -1,6 +1,6 @@
 import { ChangeEventHandler, MouseEventHandler } from "react";
 
-export type FormInput = {
+export type FormInputProps = {
   type: string;
   placeholder?: string;
   id?: string;
