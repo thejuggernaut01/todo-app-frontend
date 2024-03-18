@@ -13,9 +13,11 @@ import Button from "@/shared/components/Form/Button";
 import api from "@/shared/utils/api";
 import apiResponseErrors from "@/shared/utils/apiResponseErrors";
 import { toastSuccess } from "@/shared/utils/toastAlert";
+import { useUserDataState } from "@/features/auth/store/userData";
 
 const Login: React.FC = () => {
   const router = useRouter();
+  const { userData, updateUserData } = useUserDataState();
 
   const defaultValues = {
     email: "",
@@ -44,6 +46,7 @@ const Login: React.FC = () => {
       });
       toastSuccess(response.data?.message);
       router.push("/todo");
+      updateUserData(response.data?.data);
     } catch (error) {
       apiResponseErrors(error);
     }
