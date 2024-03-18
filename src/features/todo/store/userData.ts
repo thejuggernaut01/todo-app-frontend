@@ -10,7 +10,7 @@ type UserData = {
 };
 
 type State = {
-  userData: UserData & { fullName: string }; // Include fullName in UserData
+  userData: UserData[];
 };
 
 type Action = {
@@ -18,19 +18,9 @@ type Action = {
 };
 
 export const useUserDataState = create<State & Action>((set) => ({
-  userData: {
-    _id: 0,
-    firstName: "",
-    lastName: "",
-    email: "",
-    isVerified: false,
-    fullName: "", // Initialize fullName
-  },
+  userData: [],
   updateUserData: (data: UserData) =>
     set((state) => ({
-      userData: {
-        ...data,
-        fullName: `${data.firstName} ${data.lastName}`, // Compute fullName
-      },
+      userData: [...state.userData, data],
     })),
 }));

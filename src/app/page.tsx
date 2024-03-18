@@ -13,7 +13,7 @@ import Button from "@/shared/components/Form/Button";
 import api from "@/shared/utils/api";
 import apiResponseErrors from "@/shared/utils/apiResponseErrors";
 import { toastSuccess } from "@/shared/utils/toastAlert";
-import { useUserDataState } from "@/features/auth/store/userData";
+import { useUserDataState } from "@/features/todo/store/userData";
 
 const Login: React.FC = () => {
   const router = useRouter();
