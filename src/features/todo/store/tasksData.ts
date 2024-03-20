@@ -1,23 +1,17 @@
 import { create } from "zustand";
-
-type TasksData = {
-  _id: number;
-  title: string;
-  important: boolean;
-  completed: boolean;
-};
+import { TasksDataProps } from "@/shared/types/task";
 
 type State = {
-  tasksData: TasksData[];
+  tasksData: TasksDataProps[];
 };
 
 type Action = {
-  updateTasksData: (data: TasksData[]) => void;
+  updateTasksData: (data: TasksDataProps[]) => void;
 };
 
 export const useTasksDataState = create<State & Action>((set) => ({
   tasksData: [],
-  updateTasksData: (data: TasksData[]) =>
+  updateTasksData: (data: TasksDataProps[]) =>
     set((state) => ({
       tasksData: data,
     })),

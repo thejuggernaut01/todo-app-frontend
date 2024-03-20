@@ -59,7 +59,7 @@ const TodoApp = () => {
                     Important
                   </h2>
 
-                  <div>
+                  <div className="space-y-2">
                     {tasksData.length > 0 ? (
                       tasksData.map(({ _id, completed, important, title }) => {
                         if (important) {

@@ -8,28 +8,44 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import api from "@/shared/utils/api";
 import apiResponseErrors from "@/shared/utils/apiResponseErrors";
 import { toastSuccess } from "@/shared/utils/toastAlert";
+import { useTasksDataState } from "../store/tasksData";
 
-type TaskCardProps = {
-  _id: string;
-  title: string;
-  completed: boolean;
-  important: boolean;
-};
+import { TasksDataProps } from "@/shared/types/task";
 
 type StatusProps = "important" | "completed";
 
-const TaskCard: React.FC<TaskCardProps> = ({
+const TaskCard: React.FC<TasksDataProps> = ({
   _id,
   completed,
   important,
   title,
 }) => {
-  const setTaskStatusHandler = async (status: StatusProps) => {
+  const { tasksData, updateTasksData } = useTasksDataState();
+
+  const setTaskStatusHandler = async (status: StatusProps, state: boolean) => {
+    const updateTaskEndpoint = `/app/task/${_id}`;
+
     try {
       if (status === "important") {
-        const response = await api.patch(`/app/task/${_id}`, {
-          important: !important,
+        // make api request
+        const response = await api.patch(updateTaskEndpoint, {
+          important: state,
         });
+
+        // get the index of the task to be altered from tasksData
+        const alteredTaskDataIndex = tasksData.findIndex((task) => {
+          return task._id === _id;
+        });
+
+        // save the new altered data
+        const newAlteredTaskData = response.data.data as TasksDataProps;
+
+        // using the altered data index,
+        // update the alteredTask with the new alterted data
+        tasksData[alteredTaskDataIndex] = newAlteredTaskData;
+
+        // update the tasks data array
+        updateTasksData(tasksData);
 
         if (response.status === 200) {
           toastSuccess(response.data.message);
@@ -38,7 +54,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
       }
 
       if (status === "completed") {
-        const response = await api.patch(`/app/task/${_id}`, {
+        const response = await api.patch(updateTaskEndpoint, {
           completed: !completed,
         });
 
@@ -52,8 +68,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
     }
   };
 
-  const setCompletedTaskHandler = (_id: string) => {};
-
   return (
     <>
       <article
@@ -66,11 +80,18 @@ const TaskCard: React.FC<TaskCardProps> = ({
             {title}
           </h3>
         </div>
+
         <div className="flex space-x-3 bg-gr">
           {important ? (
-            <FaStar size={20} fill="#e4b355" />
+            <button
+              onClick={() => setTaskStatusHandler("important", !important)}
+            >
+              <FaStar size={20} fill="#e4b355" />
+            </button>
           ) : (
-            <button onClick={() => setTaskStatusHandler("important")}>
+            <button
+              onClick={() => setTaskStatusHandler("important", !important)}
+            >
               <CiStar size={23} />
             </button>
           )}
