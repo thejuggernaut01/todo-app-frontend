@@ -65,8 +65,8 @@ const TodoApp = () => {
                         if (important) {
                           return (
                             <TaskCard
-                              key={_id}
-                              _id={_id}
+                              key={`${_id}`}
+                              _id={`${_id}`}
                               title={title}
                               completed={completed}
                               important={important}
@@ -91,8 +91,8 @@ const TodoApp = () => {
                         if (!important) {
                           return (
                             <TaskCard
-                              key={_id}
-                              _id={_id}
+                              key={`${_id}`}
+                              _id={`${_id}`}
                               title={title}
                               completed={completed}
                               important={important}
