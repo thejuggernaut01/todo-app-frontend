@@ -7,12 +7,12 @@ import styles from "@/features/todo/styles/GradientBG.module.css";
 import TaskCard from "@/features/todo/components/TaskCard";
 import api from "@/shared/utils/api";
 import apiResponseErrors from "@/shared/utils/apiResponseErrors";
-import { useUserDataState } from "@/features/todo/store/userData";
+import { useTasksDataState } from "@/features/todo/store/tasksData";
 import Button from "@/shared/components/Form/Button";
 import { toastSuccess } from "@/shared/utils/toastAlert";
 
 const TodoApp = () => {
-  const { userData, updateUserData } = useUserDataState();
+  const { tasksData, updateTasksData } = useTasksDataState();
   const [taskTitle, setTaskTitle] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,12 +20,10 @@ const TodoApp = () => {
     const fetchTasks = async () => {
       try {
         const response = await api.get("/app/tasks");
-        console.log(response.data.data);
 
-        updateUserData(response.data.data);
+        const data = response.data.data;
+        updateTasksData(data);
       } catch (error) {
-        console.log(error);
-
         apiResponseErrors(error);
       }
     };
@@ -56,30 +54,58 @@ const TodoApp = () => {
 
             <section className="h-[620px] flex flex-col justify-between py-5">
               <div className="space-y-8">
-                {!userData && (
-                  <article className="space-y-2">
-                    <h2 className="text-2xl font-semibold text-gray-800">
-                      Important
-                    </h2>
+                <article className="space-y-2">
+                  <h2 className="text-2xl font-semibold text-gray-800">
+                    Important
+                  </h2>
 
-                    <TaskCard />
-                  </article>
-                )}
+                  <div>
+                    {tasksData.length > 0 ? (
+                      tasksData.map(({ _id, completed, important, title }) => {
+                        if (important) {
+                          return (
+                            <TaskCard
+                              key={_id}
+                              _id={_id}
+                              title={title}
+                              completed={completed}
+                              important={important}
+                            />
+                          );
+                        }
+                      })
+                    ) : (
+                      <p className="text-gray-700 text-center font-semibold">
+                        No important items yet!
+                      </p>
+                    )}
+                  </div>
+                </article>
 
                 <article className="space-y-2">
                   <h2 className="text-2xl font-semibold text-gray-800">Task</h2>
-                  {/* {!userData && (
-                    <div className="text-gray-700 text-center font-semibold">
-                      No todo items yet!
-                    </div>
-                  )} */}
-                  {!userData ? (
-                    <TaskCard />
-                  ) : (
-                    <div className="text-gray-700 text-center font-semibold">
-                      No todo items yet!
-                    </div>
-                  )}
+
+                  <div className="space-y-2">
+                    {tasksData.length > 0 ? (
+                      tasksData.map(({ _id, completed, important, title }) => {
+                        if (!important) {
+                          return (
+                            <TaskCard
+                              key={_id}
+                              _id={_id}
+                              title={title}
+                              completed={completed}
+                              important={important}
+                            />
+                          );
+                        }
+                      })
+                    ) : (
+                      <div className="text-gray-700 text-center font-semibold">
+                        No todo items yet!
+                      </div>
+                    )}
+                  </div>
                 </article>
               </div>
 
