@@ -58,53 +58,51 @@ const UpdatePassword: React.FC = () => {
 
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
-        <main className="w-[90%] mx-auto md:w-full md:flex h-[calc(100vh-80px)] md:h-[calc(100vh-7.2vh)] mt-5 md:mt-0 lg:gap-5">
-          <div className="relative flex-1 hidden md:block">
-            <Image
-              src="/images/update.svg"
-              alt="Update password"
-              width={500}
-              height={500}
-              className="absolute object-cover w-full h-full"
-            />
-          </div>
+      <main className="w-[90%] mx-auto md:w-full md:flex h-[calc(100vh-80px)] md:h-[calc(100vh-7.2vh)] mt-5 md:mt-0 lg:gap-5">
+        <div className="relative flex-1 hidden md:block">
+          <Image
+            src="/images/update.svg"
+            alt="Update password"
+            width={500}
+            height={500}
+            className="absolute object-cover w-full h-full"
+          />
+        </div>
 
-          <div className="flex flex-col justify-center flex-1 space-y-2 md:px-10 xl:px-12 2xl:px-16">
-            <h1 className="text-[24px] font-bold">Set new password</h1>
-            <p>Set new password to secure your Wellat account</p>
+        <div className="flex flex-col justify-center flex-1 space-y-2 md:px-10 xl:px-12 2xl:px-16">
+          <h1 className="text-[24px] font-bold">Set new password</h1>
+          <p>Set new password to secure your The Todo App account</p>
 
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                void handleSubmit(onSubmit)(event);
-              }}
-              className="mt-5 space-y-4"
-            >
-              <div className="space-y-1">
-                <FormInput
-                  placeholder="New Password"
-                  type="password"
-                  id="password"
-                  {...register("password")}
-                />
-                {errors && errors.password ? (
-                  <p className="text-xs text-danger">
-                    {errors.password?.message}
-                  </p>
-                ) : null}
-              </div>
-
-              <Button
-                text="Create new password"
-                type="submit"
-                isSubmitting={isSubmitting}
-                extraClass="bg-primary border-cancel"
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void handleSubmit(onSubmit)(event);
+            }}
+            className="mt-5 space-y-4"
+          >
+            <div className="space-y-1">
+              <FormInput
+                placeholder="New Password"
+                type="password"
+                id="password"
+                {...register("password")}
               />
-            </form>
-          </div>
-        </main>
-      </Suspense>
+              {errors && errors.password ? (
+                <p className="text-xs text-danger">
+                  {errors.password?.message}
+                </p>
+              ) : null}
+            </div>
+
+            <Button
+              text="Create new password"
+              type="submit"
+              isSubmitting={isSubmitting}
+              extraClass="bg-primary border-cancel"
+            />
+          </form>
+        </div>
+      </main>
     </>
   );
 };
