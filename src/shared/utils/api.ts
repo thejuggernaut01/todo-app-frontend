@@ -1,10 +1,13 @@
 import axios, { type AxiosInstance } from "axios";
 
-const API_BASE_URL = "https://todo-app-backend-wtew.onrender.com";
-// const API_BASE_URL = "http://localhost:8000";
+// const isProduction = process.env.NODE_ENV === "production";
+
+// const API_BASE_URL = isProduction
+//   ? process.env.PROD_BACKEND_LINK
+//   : process.env.DEV_BACKEND_LINK;
 
 const instance: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: "https://todo-app-backend-wtew.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },

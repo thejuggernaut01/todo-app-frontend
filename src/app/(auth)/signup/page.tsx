@@ -13,6 +13,7 @@ import FormInput from "@/shared/components/Form/FormInput";
 import { SignUpType, authZodValidator } from "@/features/auth/utils/validation";
 import api from "@/shared/utils/api";
 import apiResponseErrors from "@/shared/utils/apiResponseErrors";
+import { toastSuccess } from "@/shared/utils/toastAlert";
 
 const Signup: React.FC = () => {
   const router = useRouter();
@@ -47,8 +48,8 @@ const Signup: React.FC = () => {
         password,
       });
 
-      console.log(response);
-      router.push("/todo");
+      toastSuccess(response.data?.message);
+      router.push("/");
     } catch (error) {
       apiResponseErrors(error);
     }
