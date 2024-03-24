@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import ContainerLayout from "@/shared/layouts/ContainerLayout";
+import { useRouter } from "next/navigation";
 
+import ContainerLayout from "@/shared/layouts/ContainerLayout";
 import styles from "@/features/todo/styles/GradientBG.module.css";
 import TaskCard from "@/features/todo/components/TaskCard";
 import api from "@/shared/utils/api";
@@ -10,11 +11,14 @@ import apiResponseErrors from "@/shared/utils/apiResponseErrors";
 import { useTasksDataState } from "@/features/todo/store/tasksData";
 import Button from "@/shared/components/Form/Button";
 import { toastSuccess } from "@/shared/utils/toastAlert";
+import Loader from "@/shared/components/Loader/Loader";
 
 const TodoApp = () => {
+  const router = useRouter();
   const { tasksData, updateTasksData } = useTasksDataState();
   const [taskTitle, setTaskTitle] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [logout, setLogout] = useState(false);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -48,19 +52,38 @@ const TodoApp = () => {
     setIsLoading(false);
   };
 
+  const logoutHandler = async () => {
+    setLogout(true);
+    try {
+      const response = await api.post("/auth/logout");
+
+      toastSuccess(response.data.message);
+      router.push("/");
+    } catch (error) {
+      apiResponseErrors(error);
+    }
+    setLogout(false);
+  };
+
   return (
     <>
       <main className={styles.gradient}>
         <ContainerLayout>
-          <section className="space-y-5 pt-5 sm:pt-10">
-            <h1 className="text-2xl sm:text-3xl font-semibold text-center">
-              Todo App
-            </h1>
+          <section className="pt-5 space-y-5 sm:pt-10">
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-semibold sm:text-3xl">Todo App</h1>
+              <button
+                className="px-3 py-1 text-sm text-white bg-red-500 rounded-full"
+                onClick={() => logoutHandler()}
+              >
+                {logout ? <Loader /> : "Log out"}
+              </button>
+            </div>
 
             <section className="flex flex-col justify-between">
               <div className="space-y-8">
                 <article className="space-y-2">
-                  <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
+                  <h2 className="text-xl font-semibold text-gray-800 sm:text-2xl">
                     Important
                   </h2>
 
@@ -80,7 +103,7 @@ const TodoApp = () => {
                         }
                       })
                     ) : (
-                      <p className="text-gray-700 text-sm md:text-base text-center font-semibold">
+                      <p className="text-sm font-semibold text-center text-gray-700 md:text-base">
                         No important items yet!
                       </p>
                     )}
@@ -88,7 +111,7 @@ const TodoApp = () => {
                 </article>
 
                 <article className="space-y-2">
-                  <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
+                  <h2 className="text-xl font-semibold text-gray-800 sm:text-2xl">
                     Task
                   </h2>
 
@@ -108,7 +131,7 @@ const TodoApp = () => {
                         }
                       })
                     ) : (
-                      <p className="text-gray-700 text-sm md:text-base text-center font-semibold">
+                      <p className="text-sm font-semibold text-center text-gray-700 md:text-base">
                         No todo items yet!
                       </p>
                     )}
@@ -116,7 +139,7 @@ const TodoApp = () => {
                 </article>
               </div>
 
-              <article className="flex mt-10 my-5">
+              <article className="flex my-5 mt-10">
                 <input
                   type="text"
                   className="w-full h-12 pl-4 rounded-l-lg"

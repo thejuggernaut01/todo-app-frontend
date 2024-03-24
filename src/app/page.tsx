@@ -45,8 +45,9 @@ const Login: React.FC = () => {
         password,
       });
       toastSuccess(response.data?.message);
-      router.push("/todo");
+
       updateUserData(response.data?.data);
+      router.push("/todo");
     } catch (error) {
       apiResponseErrors(error);
     }

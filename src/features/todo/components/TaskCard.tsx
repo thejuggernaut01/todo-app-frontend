@@ -147,7 +147,7 @@ const TaskCard: React.FC<TasksDataProps> = ({
             </h3>
           </div>
 
-          <div className="flex space-x-3 items-center">
+          <div className="flex items-center space-x-3">
             <Tooltip>
               <TooltipTrigger asChild>
                 <button onClick={() => setTaskStatusHandler("important")}>
@@ -165,20 +165,13 @@ const TaskCard: React.FC<TasksDataProps> = ({
 
             <Popover>
               <PopoverTrigger asChild>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost">
-                      <HiOutlineDotsHorizontal
-                        size={23}
-                        stroke="rgb(156, 163, 175)"
-                        style={{ cursor: "pointer" }}
-                      />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>More options</p>
-                  </TooltipContent>
-                </Tooltip>
+                <Button variant="ghost">
+                  <HiOutlineDotsHorizontal
+                    size={23}
+                    stroke="rgb(156, 163, 175)"
+                    style={{ cursor: "pointer" }}
+                  />
+                </Button>
               </PopoverTrigger>
 
               <PopoverContent
@@ -209,7 +202,7 @@ const TaskCard: React.FC<TasksDataProps> = ({
                   </button>
 
                   <button
-                    className="text-start hover:bg-red-300 p-2 hover:rounded-lg text-red-700"
+                    className="p-2 text-red-700 text-start hover:bg-red-300 hover:rounded-lg"
                     onClick={() => deleteTaskHandler()}
                   >
                     {isLoading ? <p>.....</p> : <p>Delete task</p>}
