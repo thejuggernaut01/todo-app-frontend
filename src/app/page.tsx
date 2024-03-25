@@ -6,7 +6,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { LoginType, authZodValidator } from "@/features/auth/utils/validation";
+import {
+  LoginType,
+  authZodValidator,
+} from "@/features/auth/utils/authValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "@/shared/components/Form/FormInput";
 import Button from "@/shared/components/Form/Button";
@@ -83,7 +86,6 @@ const Login: React.FC = () => {
               event.preventDefault();
               void handleSubmit(onSubmit)(event);
             }}
-            action=""
             className="mt-5 space-y-4"
           >
             <div className="space-y-1">

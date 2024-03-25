@@ -10,7 +10,7 @@ import FormInput from "@/shared/components/Form/FormInput";
 import {
   ForgotPasswordType,
   authZodValidator,
-} from "@/features/auth/utils/validation";
+} from "@/features/auth/utils/authValidation";
 import api from "@/shared/utils/api";
 import apiResponseErrors from "@/shared/utils/apiResponseErrors";
 import { toastSuccess } from "@/shared/utils/toastAlert";

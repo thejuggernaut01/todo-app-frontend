@@ -12,18 +12,49 @@ import { useTasksDataState } from "@/features/todo/store/tasksData";
 import Button from "@/shared/components/Form/Button";
 import { toastSuccess } from "@/shared/utils/toastAlert";
 import Loader from "@/shared/components/Loader/Loader";
+import AddTask from "@/features/todo/components/bottomSheets/AddTask";
+import { useWindowWidthState } from "@/shared/store/windowWidth";
+import {
+  useAddTaskState,
+  useViewTaskState,
+} from "@/features/todo/store/addTask";
+import { AnimatePresence } from "framer-motion";
+import ViewTask from "@/features/todo/components/bottomSheets/ViewTask";
 
 const TodoApp = () => {
   const router = useRouter();
   const { tasksData, updateTasksData } = useTasksDataState();
-  const [taskTitle, setTaskTitle] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [logout, setLogout] = useState(false);
+
+  const { windowWidth, updatewindowWidth } = useWindowWidthState();
+  const { isOpen, setIsOpen } = useAddTaskState();
+  const { isOpen: openViewTask, setIsOpen: setOpenViewTask } =
+    useViewTaskState();
+
+  const [taskId, setTaskId] = useState("");
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newWidth = window.innerWidth;
+      updatewindowWidth(newWidth);
+    };
+
+    // Attach the event listener
+    window.addEventListener("resize", handleResize);
+
+    // Call it initially to set the initial width
+    handleResize();
+
+    // Detach the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await api.get("/app/tasks");
+        const response = await api.get("/todo/tasks");
         updateTasksData(response.data.data);
       } catch (error) {
         apiResponseErrors(error);
@@ -32,25 +63,6 @@ const TodoApp = () => {
 
     fetchTasks();
   }, []);
-
-  const addNewTaskHandler = async () => {
-    setIsLoading(true);
-    try {
-      const response = await api.post("/app/task", {
-        title: taskTitle,
-      });
-
-      // update task data
-      const newTaskData = [...tasksData, response.data.data];
-      updateTasksData(newTaskData);
-
-      setTaskTitle("");
-      toastSuccess(response.data.message);
-    } catch (error) {
-      apiResponseErrors(error);
-    }
-    setIsLoading(false);
-  };
 
   const logoutHandler = async () => {
     setLogout(true);
@@ -80,7 +92,7 @@ const TodoApp = () => {
               </button>
             </div>
 
-            <section className="flex flex-col justify-between">
+            <section className="flex flex-col justify-between gap-y-12 md:gap-y-24">
               <div className="space-y-8">
                 <article className="space-y-2">
                   <h2 className="text-xl font-semibold text-gray-800 sm:text-2xl">
@@ -89,19 +101,26 @@ const TodoApp = () => {
 
                   <div className="space-y-2 overflow-y-auto">
                     {tasksData.length > 0 ? (
-                      tasksData.map(({ _id, completed, important, title }) => {
-                        if (important) {
-                          return (
-                            <TaskCard
-                              key={`${_id}`}
-                              _id={`${_id}`}
-                              title={title}
-                              completed={completed}
-                              important={important}
-                            />
-                          );
+                      tasksData.map(
+                        ({ _id, completed, important, title, description }) => {
+                          if (important) {
+                            return (
+                              <TaskCard
+                                key={`${_id}`}
+                                _id={`${_id}`}
+                                title={title}
+                                description={description}
+                                completed={completed}
+                                important={important}
+                                onClick={() => {
+                                  setTaskId(_id);
+                                  setOpenViewTask(true);
+                                }}
+                              />
+                            );
+                          }
                         }
-                      })
+                      )
                     ) : (
                       <p className="text-sm font-semibold text-center text-gray-700 md:text-base">
                         No important items yet!
@@ -117,19 +136,26 @@ const TodoApp = () => {
 
                   <div className="space-y-2 overflow-y-auto">
                     {tasksData.length > 0 ? (
-                      tasksData.map(({ _id, completed, important, title }) => {
-                        if (!important) {
-                          return (
-                            <TaskCard
-                              key={`${_id}`}
-                              _id={`${_id}`}
-                              title={title}
-                              completed={completed}
-                              important={important}
-                            />
-                          );
+                      tasksData.map(
+                        ({ _id, completed, important, title, description }) => {
+                          if (!important) {
+                            return (
+                              <TaskCard
+                                key={`${_id}`}
+                                _id={`${_id}`}
+                                title={title}
+                                description={description}
+                                completed={completed}
+                                important={important}
+                                onClick={() => {
+                                  setTaskId(_id);
+                                  setOpenViewTask(true);
+                                }}
+                              />
+                            );
+                          }
                         }
-                      })
+                      )
                     ) : (
                       <p className="text-sm font-semibold text-center text-gray-700 md:text-base">
                         No todo items yet!
@@ -139,29 +165,26 @@ const TodoApp = () => {
                 </article>
               </div>
 
-              <article className="flex my-5 mt-10">
-                <input
-                  type="text"
-                  className="w-full h-12 pl-4 rounded-l-lg"
-                  value={taskTitle}
-                  onChange={(e) => setTaskTitle(e.target.value)}
+              <div className="w-[70%] mx-auto">
+                <Button
+                  text="Add task"
+                  type="submit"
+                  extraClass="text-white whitespace-nowrap border-none py-4 bg-[#1E212F]"
+                  onClick={() => setIsOpen(true)}
                 />
-
-                <div className="h-12 bg-[#1E212F] flex items-center px-5 rounded-r-lg gap-x-2">
-                  <p className="text-2xl font-light text-white">+</p>
-                  <Button
-                    text="Add"
-                    type="submit"
-                    isSubmitting={isLoading}
-                    extraClass="h-full text-white whitespace-nowrap border-none bg-transparent"
-                    onClick={() => addNewTaskHandler()}
-                  />
-                </div>
-              </article>
+              </div>
             </section>
           </section>
         </ContainerLayout>
       </main>
+
+      <AnimatePresence>
+        {isOpen && <AddTask windowWidth={windowWidth} />}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {openViewTask && <ViewTask id={taskId} />}
+      </AnimatePresence>
     </>
   );
 };

@@ -35,12 +35,14 @@ const TaskCard: React.FC<TasksDataProps> = ({
   completed,
   important,
   title,
+  description,
+  onClick,
 }) => {
   const { tasksData, updateTasksData } = useTasksDataState();
   const [isLoading, setIsLoading] = useState(false);
 
   const setTaskStatusHandler = async (status: StatusProps) => {
-    const updateTaskEndpoint = `/app/task/${_id}`;
+    const updateTaskEndpoint = `/todo/task/${_id}`;
 
     try {
       if (status === "important") {
@@ -183,8 +185,11 @@ const TaskCard: React.FC<TasksDataProps> = ({
                 }}
               >
                 <aside className="flex flex-col space-y-1 text-sm">
-                  <button className="text-start hover:bg-[#ffffff] p-2 hover:rounded-lg">
-                    <p>Edit task</p>
+                  <button
+                    className="text-start hover:bg-[#ffffff] p-2 hover:rounded-lg"
+                    onClick={onClick}
+                  >
+                    <p>Open task</p>
                   </button>
 
                   <button

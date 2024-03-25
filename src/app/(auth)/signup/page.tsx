@@ -10,7 +10,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import Button from "@/shared/components/Form/Button";
 import FormInput from "@/shared/components/Form/FormInput";
-import { SignUpType, authZodValidator } from "@/features/auth/utils/validation";
+import {
+  SignUpType,
+  authZodValidator,
+} from "@/features/auth/utils/authValidation";
 import api from "@/shared/utils/api";
 import apiResponseErrors from "@/shared/utils/apiResponseErrors";
 import { toastSuccess } from "@/shared/utils/toastAlert";
