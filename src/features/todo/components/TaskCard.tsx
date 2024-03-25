@@ -105,7 +105,7 @@ const TaskCard: React.FC<TasksDataProps> = ({
   const deleteTaskHandler = async () => {
     setIsLoading(true);
     try {
-      const response = await api.delete(`/app/task/${_id}`);
+      const response = await api.delete(`/todo/task/${_id}`);
 
       const newTasksData = tasksData.filter((task) => {
         return task._id !== _id;
